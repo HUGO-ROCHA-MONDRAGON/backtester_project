@@ -1,5 +1,6 @@
 import pandas as pd
-from backtester_poo.core import Backtester, Strategy, Result
+from backtester_project.core import Backtester, Strategy, Result
+
 
 class BuyAndHold(Strategy):
     def get_position(self, historical_data, current_position):

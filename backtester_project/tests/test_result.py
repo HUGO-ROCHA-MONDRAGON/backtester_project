@@ -1,4 +1,4 @@
-from backtester_poo.core.result import Result
+from backtester_project.core.result import Result
 import math
 
 def test_result_basic_metrics():

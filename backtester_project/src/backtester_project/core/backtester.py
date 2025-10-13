@@ -1,5 +1,7 @@
 import pandas as pd
-from backtester_poo.core import Result, Strategy
+from .result import Result
+from .strategy import Strategy
+
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # %%% Classe principale de Backtesting %%%%%%%%%%%%%%%%%

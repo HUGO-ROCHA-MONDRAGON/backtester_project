@@ -1,4 +1,4 @@
-from backtester_poo.core.strategy import Strategy
+from backtester_project.core.strategy import Strategy
 
 class BuyAndHold(Strategy):
     """

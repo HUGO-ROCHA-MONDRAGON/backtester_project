@@ -1,5 +1,5 @@
 import pytest
-from backtester_poo.core.strategy import Strategy
+from backtester_project.core.strategy import Strategy
 
 # Une stratégie minimale pour les tests
 class DummyStrategy(Strategy):
