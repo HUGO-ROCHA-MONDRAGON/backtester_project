@@ -1,4 +1,4 @@
-from backtester_project.core.strategy import Strategy
+from ..core.strategy import Strategy
 
 class MeanReversionStrategy(Strategy):
     """
