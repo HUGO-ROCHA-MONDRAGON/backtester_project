@@ -49,7 +49,7 @@ class Backtester:
                     old_pos = positions[asset]
                     new_pos = new_positions.get(asset, old_pos)
 
-                    # Si la position change → enregistre un trade et applique coûts
+                    # Si la position change, on enregistre un trade et applique coûts
                     if new_pos != old_pos:
                         trade_cost = abs(new_pos - old_pos) * prices_today[asset] * (
                             self.transaction_cost + self.slippage
@@ -57,13 +57,13 @@ class Backtester:
                         trades.append((i, asset, prices_today[asset], new_pos, trade_cost))
                         positions[asset] = new_pos
 
-            # Calcul du rendement du portefeuille à t
+            # Calcul du rendement du portefeuille
             daily_returns = {
                 asset: (prices_today[asset] - prices_yesterday[asset]) / prices_yesterday[asset]
                 for asset in self.assets
             }
 
-            # PnL pondéré par positions
+            # PnL 
             portfolio_return = sum(
                 positions[asset] * daily_returns[asset] for asset in self.assets
             )

@@ -17,25 +17,26 @@ class Result:
         # Moyenne et variance sécurisées
         self.mean_r = sum(self.returns) / len(self.returns) if self.returns else 0
 
+    
     def __repr__(self):
         return f"Result(total_return={self.total_return:.4f}, trades={self.trades})"
 
-    # === Performance brute ===
+    # Performance annualisee
     def total_perf(self):
         ann_perf = (1 + self.total_return) ** (252 / self.n_days) - 1
         return f"Total Return: {self.total_return*100:.2f}%, Annualized Return: {ann_perf*100:.2f}%"
 
-    # === Variance et volatilité ===
+    # Variance (sigma^2)
     def sigma_squared(self):
         if not self.returns or len(self.returns) < 2:
             return 0
         variance = sum((r - self.mean_r) ** 2 for r in self.returns) / (len(self.returns) - 1)
         return variance
-
+    # Volat (sigma)
     def volatility(self):
         return math.sqrt(self.sigma_squared())
 
-    # === Sharpe Ratio ===
+    # Ratio de sharpe
     def sharpe_ratio(self, risk_free_rate=0.0):
         if not self.returns or len(self.returns) < 2:
             return 0
@@ -45,7 +46,7 @@ class Result:
         daily_sharpe = (self.mean_r - risk_free_rate / 252) / std_r
         return daily_sharpe * math.sqrt(252)
 
-    # === Sortino Ratio ===
+    # Ratio de Sortino
     def sortino_ratio(self, risk_free_rate=0.0):
         if not self.returns or len(self.returns) < 2:
             return 0
@@ -59,7 +60,7 @@ class Result:
         daily_sortino = mean_excess / downside_std
         return daily_sortino * math.sqrt(252)
 
-    # === Max Drawdown ===
+    #  Max Drawdown 
     def max_drawdown(self):
         if not self.returns:
             return 0
@@ -75,11 +76,11 @@ class Result:
             max_dd = max(max_dd, drawdown)
         return max_dd
 
-    # === Nombre de trades ===
+    #  Nombre de trades 
     def num_trades(self):
         return len(self.trades)
 
-    # === Pourcentage de trades gagnants ===
+    # Pourcentage de trades gagnants
     def win_rate(self):
         if not self.trades or len(self.trades) < 2:
             return 0
@@ -136,37 +137,50 @@ class Result:
         else:
             raise ValueError("Backend non supporté. Choisissez: matplotlib / seaborn / plotly.")
     
+    # On crée la fonction compare dans la classe Results en utilisant
+    # le décorateur @staticmethod pour pouvoir l’appeler directement
+    # depuis la classe sans avoir besoin d’une instance (ex: Results.compare(...)).
     @staticmethod
     def compare(*results):
         """
         Compare les performances de plusieurs stratégies.
         Affiche un résumé sous forme de tableau texte.
         """
+        # Vérifie qu'au moins un résultat est fourni
         if not results:
             print("Aucun résultat fourni.")
             return
 
+        # En-têtes du tableau affiché
         headers = [
             "Stratégie", "Total Return (%)", "Ann. Return (%)",
             "Sharpe", "Sortino", "Max DD (%)", "Trades", "Win Rate (%)"
         ]
 
+        # Titre et format de la table
         print("\n=== COMPARAISON DES STRATÉGIES ===")
         print("{:<15} {:>15} {:>15} {:>10} {:>10} {:>12} {:>10} {:>12}".format(*headers))
         print("-" * 95)
 
+        # Boucle sur chaque objet "result" passé en argument
         for i, r in enumerate(results, 1):
+            # Calcul du rendement annualisé à partir du rendement total et du nombre de jours
             ann_perf = (1 + r.total_return) ** (252 / r.n_days) - 1
+
+            # Prépare les valeurs à afficher pour chaque stratégie
             row = [
-                f"Strat {i}",
-                f"{r.total_return*100:.2f}",
-                f"{ann_perf*100:.2f}",
-                f"{r.sharpe_ratio():.2f}",
-                f"{r.sortino_ratio():.2f}",
-                f"{r.max_drawdown()*100:.2f}",
-                f"{r.num_trades()}",
-                f"{r.win_rate()*100:.2f}"
+                f"Strat {i}",                              # Nom générique de la stratégie
+                f"{r.total_return*100:.2f}",               # Rendement total (%)
+                f"{ann_perf*100:.2f}",                     # Rendement annualisé (%)
+                f"{r.sharpe_ratio():.2f}",                 # Ratio de Sharpe
+                f"{r.sortino_ratio():.2f}",                # Ratio de Sortino
+                f"{r.max_drawdown()*100:.2f}",             # Drawdown maximal (%)
+                f"{r.num_trades()}",                       # Nombre total de trades
+                f"{r.win_rate()*100:.2f}"                  # Taux de réussite (%)
             ]
+
+            # Affiche la ligne formatée dans le tableau
             print("{:<15} {:>15} {:>15} {:>10} {:>10} {:>12} {:>10} {:>12}".format(*row))
+
 
 
